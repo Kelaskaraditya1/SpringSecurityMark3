@@ -25,10 +25,12 @@ public class SecurityController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User already exist!!");
     }
 
-    @GetMapping("/login/{username}")
-    public ResponseEntity<String> login(@PathVariable("username") String username){
-        if(usersService.login(username))
-            return ResponseEntity.status(HttpStatus.OK).body("Login Successfully!!");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Failed to Login!!");
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Users users){
+        if(usersService.login(users)!="false"){
+            String userToken= usersService.login(users);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(userToken);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid Username or Password!!");
     }
 }

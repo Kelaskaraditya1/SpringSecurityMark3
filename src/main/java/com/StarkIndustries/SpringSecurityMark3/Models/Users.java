@@ -13,6 +13,7 @@ public class Users {
     @Column(name = "user_id")
     private int userId;
 
+    @Column(name = "username",unique = true,nullable = false)
     private String username;
 
     @Column(name = "password",nullable = false)
