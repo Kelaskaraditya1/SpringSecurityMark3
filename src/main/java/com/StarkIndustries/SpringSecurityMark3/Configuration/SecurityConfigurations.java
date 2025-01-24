@@ -1,5 +1,6 @@
 package com.StarkIndustries.SpringSecurityMark3.Configuration;
 
+import com.StarkIndustries.SpringSecurityMark3.Filter.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.proxy.NoOp;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,9 @@ public class SecurityConfigurations {
     @Autowired
     public UserDetailsService userDetailsService;
 
+    @Autowired
+    public JwtFilter jwtFilter;
+
     @Bean
     public SecurityFilterChain getSecurityFilterChain(HttpSecurity security) throws Exception{
 
@@ -35,6 +40,7 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(request->request.requestMatchers("signup","login/**").permitAll().anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
